@@ -21,3 +21,22 @@ function assertDefined<Value>(value: Value | null | undefined): asserts value i
 - Broswer form only supports FETCH and POST. Other actions will be fallback to GET.
 - Form with GET action will seriallize inputs into a "query string"
 - Form with POST action will submit the form body as a "payload". The browser will encode it as `application/x-www-form-urlencoded`
+- Client-side focused applications (Eg: handling delete button). We will run into different edge cases
+	- What if the user clicks the button twice?
+	- What if the user clicks the button while the request is still in flight?
+	- What if the user clicks the button while the request is still in flight, and then navigates away from the page?
+	- What if the request fails?
+	- What if the user clicks the button twice, but the second response returns first?
+- Remix will handle that for us automatically
+- If there are many buttons in the form, we can add `name="intent"` to the button
+```js
+<Form>
+	<Button name="intent" value="delete">Delete</Button>
+	<Button name="intent" value="edit">Edit</Button>
+</Form>
+
+// server
+const formData = await request.formData()
+const intent = formData.get("intent")
+// check intent and do action
+```
