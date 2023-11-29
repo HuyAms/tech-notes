@@ -44,7 +44,7 @@ const intent = formData.get("intent")
 ## 4. Scripting
 **Javascript**
 We need Javascript for: 
-- Navigatinos
+- Navigations
 - Pending UI
 - Accessibility
 - Prefetching
@@ -87,3 +87,8 @@ export function useIsSubmitting({
 	)
 }
 ```
+
+## 5. Search Engine Optimization
+- Remix metadata doesn't get merged automatically. It always uses the meta of a leaf route (lowest route)
+- Remix Links get merged
+- Meta function will run even when the loader throws error. In that case, `data` returned from the loader might be undefined.
