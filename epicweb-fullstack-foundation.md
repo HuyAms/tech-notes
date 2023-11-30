@@ -92,3 +92,9 @@ export function useIsSubmitting({
 - Remix metadata doesn't get merged automatically. It always uses the meta of a leaf route (lowest route)
 - Remix Links get merged
 - Meta function will run even when the loader throws error. In that case, `data` returned from the loader might be undefined.
+- We can also get loader data from other routes
+```
+export const meta: MetaFunction<typeof loader, {'root', typeof rootLoader}> = ({matches}) => {
+	const rootLoaderData = matches.find(m => m.id === "root")
+}
+```
