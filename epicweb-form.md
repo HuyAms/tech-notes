@@ -137,3 +137,24 @@ We can abstract this into a hook
 ```
 useFocusInvalid(formRef.current, hasErrors)
 ```
+
+## Schema Validation
+We can do both server and client validation with Zod + Conform
+
+Check this doc: https://conform.guide/tutorial
+
+## File upload
+
+We use the `<input type="file"/>` element that enables interaction with the file system. This element creates an user interface that allows users to select one or multiple files from their system.
+
+```
+<form action="/upload" method="post" enctype="multipart/form-data">
+	<label for="file-upload-input">Upload File</label>
+	<input type="file" id="file-upload-input" name="file-upload" />
+	<button type="submit">Upload File</button>
+</form>
+
+```
+
+* `enctype` attribute: set to `multipart/form-data` to ensure the file data is sent correctly to the server
+* `multiple` attribute: for multiple file selection
