@@ -158,3 +158,59 @@ We use the `<input type="file"/>` element that enables interaction with the file
 
 * `enctype` attribute: set to `multipart/form-data` to ensure the file data is sent correctly to the server
 * `multiple` attribute: for multiple file selection
+
+Remix has some util functions to handle the file
+
+```
+import {
+	unstable_createMemoryUploadHandler as createMemoryUploadHandler,
+	unstable_parseMultipartFormData as parseMultipartFormData,
+} from '@remix-run/node'
+export const action = async ({ request }: ActionArgs) => {
+	const uploadHandler = createMemoryUploadHandler({
+		maxPartSize: 1024 * 1024 * 5, // 5 MB
+	})
+	const formData = await parseMultipartFormData(request, uploadHandler)
+
+	const file = formData.get('avatar')
+
+	// file is a "File" (https://mdn.io/File) polyfilled for node
+	// ... etc
+}
+```
+
+## Complex structure
+
+👉 Array
+```
+<form>
+	<input type="text" name="todo" value="Buy milk" />
+	<input type="text" name="todo" value="Buy eggs" />
+	<input type="text" name="todo" value="Wash dishes" />
+</form>
+```
+
+```
+const formData = new FormData(form)
+formData.getAll('todo') // ["Buy milk", "Buy eggs", "Wash dishes"]
+```
+👉 Object
+
+Since form doesn't support object, we could use Conform 😅 [See](https://conform.guide/complex-structures)
+
+## Honeypot
+Usually bots will try to find and submit any available forms 😅
+
+Luckily, we can use Honeypot to prevent bots. The idea is pretty simple, we render an input that is visually hidden to human. If a bot fills in that input, we prevent the form from being submitted.
+
+Another useful thing you can do along with the honeypot field is to add a field that will allow you to determine when the form was generated. So if the form is submitted too quickly, you can be pretty confident that it's a bot. This is more tricky than it sounds because bots could easily change the value of that field, so you do need to encrypt the value. But if you manage that, it's a great way to catch bots.
+
+See more: [Remix utils HoneyPot](https://github.com/sergiodxa/remix-utils)
+
+## Cross-site Request Forgery
+
+This is a type of web security vulnerability where an attacker tricks a victim into performing actions they did not intent to do on a web application where they're authenticated.
+
+## Rate limiting
+
+Rate limiting helps to control the flow of incoming requests, ensuring that our server isn't overwhelmed. It does this by limiting the number of requests a user can make in a specific window of time. In the context of a web application, especially one that uses forms, rate limiting can be crucial.
